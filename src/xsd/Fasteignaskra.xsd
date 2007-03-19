@@ -1,0 +1,117 @@
+               <xs:schema id="Fasteignaskra" xmlns="" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+                  <xs:element name="Fasteignaskra" msdata:IsDataSet="true" msdata:Locale="is-IS">
+                     <xs:complexType>
+                        <xs:choice maxOccurs="unbounded">
+                           <xs:element name="Fasteign">
+                              <xs:complexType>
+                                 <xs:sequence>
+                                    <xs:element name="fastanr" type="xs:int" minOccurs="0" />
+                                    <xs:element name="landnr" type="xs:int" minOccurs="0" />
+                                    <xs:element name="merking" type="xs:string" minOccurs="0" />
+                                    <xs:element name="heitinr" type="xs:int" minOccurs="0" />
+                                    <xs:element name="gotuheiti" type="xs:string" minOccurs="0" />
+                                    <xs:element name="husnumer" type="xs:string" minOccurs="0" />
+                                    <xs:element name="sveitarfelagsnr" type="xs:string" minOccurs="0" />
+                                    <xs:element name="sveitarfelag" type="xs:string" minOccurs="0" />
+                                    <xs:element name="byggdarnr" type="xs:string" minOccurs="0" />
+                                    <xs:element name="byggd" type="xs:string" minOccurs="0" />
+                                    <xs:element name="skyring" type="xs:string" minOccurs="0" />
+                                    <xs:element name="notkunarlykill" type="xs:short" minOccurs="0" />
+                                    <xs:element name="notkun" type="xs:string" minOccurs="0" />
+                                    <xs:element name="tryggfelagslykill" type="xs:string" minOccurs="0" />
+                                    <xs:element name="tryggfelagsheiti" type="xs:string" minOccurs="0" />
+                                    <xs:element name="Matseining" minOccurs="0" maxOccurs="unbounded">
+                                       <xs:annotation>
+                                          <xs:appinfo>
+                                             <msdata:Relationship name="Matseiningar" msdata:parent="Fasteign" msdata:child="Matseining" msdata:parentkey="fastanr" msdata:childkey="fastanr" />
+                                          </xs:appinfo>
+                                       </xs:annotation>
+                                       <xs:complexType>
+                                          <xs:sequence>
+                                             <xs:element name="fastanr" type="xs:int" minOccurs="0" />
+                                             <xs:element name="matseiningarnr" type="xs:int" minOccurs="0" />
+                                             <xs:element name="landnr" type="xs:int" minOccurs="0" />
+                                             <xs:element name="heitinr" type="xs:int" minOccurs="0" />
+                                             <xs:element name="skyring" type="xs:string" minOccurs="0" />
+                                             <xs:element name="notkunarlykill" type="xs:short" minOccurs="0" />
+                                             <xs:element name="notkun" type="xs:string" minOccurs="0" />
+                                             <xs:element name="merking" type="xs:string" minOccurs="0" />
+                                             <xs:element name="flatarmal" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="flatarmalseining" type="xs:string" minOccurs="0" />
+                                             <xs:element name="byggingarstigslykill" type="xs:string" minOccurs="0" />
+                                             <xs:element name="byggingarstig" type="xs:string" minOccurs="0" />
+                                             <xs:element name="byggingarefnislykill" type="xs:string" minOccurs="0" />
+                                             <xs:element name="byggingarefni" type="xs:string" minOccurs="0" />
+                                             <xs:element name="byggingarar" type="xs:string" minOccurs="0" />
+                                             <xs:element name="herbergi" type="xs:int" minOccurs="0" />
+                                             <xs:element name="husmat" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="lodarhlutamat" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="fasteignamat" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="brunabotamat" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="byggingarvisitala" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="bvisitdags" type="xs:dateTime" minOccurs="0" />
+                                          </xs:sequence>
+                                       </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Eigandi" minOccurs="0" maxOccurs="unbounded">
+                                       <xs:complexType>
+                                          <xs:sequence>
+                                             <xs:element name="fastanr" type="xs:int" minOccurs="0" />
+                                             <xs:element name="kennitala" type="xs:string" minOccurs="0" />
+                                             <xs:element name="nafn" type="xs:string" minOccurs="0" />
+                                             <xs:element name="eignarhluti" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="eigandanumer" type="xs:string" minOccurs="0" />
+                                             <xs:element name="kaupdagur" type="xs:dateTime" minOccurs="0" />
+                                             <xs:element name="afhendingardagur" type="xs:dateTime" minOccurs="0" />
+                                          </xs:sequence>
+                                       </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Abuandi" minOccurs="0" maxOccurs="unbounded">
+                                       <xs:complexType>
+                                          <xs:sequence>
+                                             <xs:element name="fastanr" type="xs:int" minOccurs="0" />
+                                             <xs:element name="kennitala" type="xs:string" minOccurs="0" />
+                                             <xs:element name="nafn" type="xs:string" minOccurs="0" />
+                                             <xs:element name="eignarhluti" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="eigandanumer" type="xs:string" minOccurs="0" />
+                                             <xs:element name="kaupdagur" type="xs:dateTime" minOccurs="0" />
+                                             <xs:element name="afhendingardagur" type="xs:dateTime" minOccurs="0" />
+                                          </xs:sequence>
+                                       </xs:complexType>
+                                    </xs:element>
+                                    <xs:element name="Umradandi" minOccurs="0" maxOccurs="unbounded">
+                                       <xs:complexType>
+                                          <xs:sequence>
+                                             <xs:element name="fastanr" type="xs:int" minOccurs="0" />
+                                             <xs:element name="kennitala" type="xs:string" minOccurs="0" />
+                                             <xs:element name="nafn" type="xs:string" minOccurs="0" />
+                                             <xs:element name="eignarhluti" type="xs:decimal" minOccurs="0" />
+                                             <xs:element name="eigandanumer" type="xs:string" minOccurs="0" />
+                                             <xs:element name="kaupdagur" type="xs:dateTime" minOccurs="0" />
+                                             <xs:element name="afhendingardagur" type="xs:dateTime" minOccurs="0" />
+                                          </xs:sequence>
+                                       </xs:complexType>
+                                    </xs:element>
+                                 </xs:sequence>
+                              </xs:complexType>
+                           </xs:element>
+                        </xs:choice>
+                     </xs:complexType>
+                     <xs:unique name="Constraint1">
+                        <xs:selector xpath=".//Fasteign" />
+                        <xs:field xpath="fastanr" />
+                     </xs:unique>
+                     <xs:keyref name="Umradendur" refer="Constraint1" msdata:IsNested="true">
+                        <xs:selector xpath=".//Umradandi" />
+                        <xs:field xpath="fastanr" />
+                     </xs:keyref>
+                     <xs:keyref name="Abuendur" refer="Constraint1" msdata:IsNested="true">
+                        <xs:selector xpath=".//Abuandi" />
+                        <xs:field xpath="fastanr" />
+                     </xs:keyref>
+                     <xs:keyref name="Eigandi" refer="Constraint1" msdata:IsNested="true">
+                        <xs:selector xpath=".//Eigandi" />
+                        <xs:field xpath="fastanr" />
+                     </xs:keyref>
+                  </xs:element>
+               </xs:schema>

@@ -1,0 +1,16 @@
+<deployment xmlns="http://xml.apache.org/axis/wsdd/" xmlns:java="http://xml.apache.org/axis/wsdd/providers/java">
+  <transport name="http" pivot="java:org.apache.axis.transport.http.HTTPSender"/>
+  <globalConfiguration>
+	<parameter name="addressing.sendReplyTo" value="true" />
+	<parameter name="enableNamespacePrefixOptimization" value="false" />
+   	<requestFlow >
+		<handler type="java:org.apache.axis.message.addressing.handler.AddressingHandler">
+			<parameter name="referencePropertyNames" value="{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}Action;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}MessageID;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}ReplyTo;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}To" />
+			<!--parameter name="referencePropertyNames" value="*"/-->
+		</handler>
+		<handler type="java:org.apache.ws.axis.security.WSDoAllSender" >
+    		<!-- parameters removed -->
+    	</handler>
+	</requestFlow >
+  </globalConfiguration >
+</deployment>

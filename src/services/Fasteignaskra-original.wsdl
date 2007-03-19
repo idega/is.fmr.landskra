@@ -1,0 +1,257 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<wsdl:definitions xmlns:http="http://schemas.xmlsoap.org/wsdl/http/" xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/" xmlns:s="http://www.w3.org/2001/XMLSchema" xmlns:soapenc="http://schemas.xmlsoap.org/soap/encoding/" xmlns:tns="urn:landskra-wse:fasteignaskra" xmlns:tm="http://microsoft.com/wsdl/mime/textMatching/" xmlns:mime="http://schemas.xmlsoap.org/wsdl/mime/" targetNamespace="urn:landskra-wse:fasteignaskra" xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/">
+  <wsdl:types>
+    <s:schema elementFormDefault="qualified" targetNamespace="urn:landskra-wse:fasteignaskra">
+      <s:import namespace="http://www.w3.org/2001/XMLSchema" />
+      <s:element name="findHeitiByHeiti">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Heiti" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SveitarfelagsNr" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="findHeitiByHeitiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="findHeitiByHeitiResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="BillingInfo" type="tns:BillingInfo" />
+      <s:complexType name="BillingInfo">
+        <s:sequence>
+          <s:element minOccurs="0" maxOccurs="1" name="userId" type="s:string" />
+        </s:sequence>
+      </s:complexType>
+      <s:element name="findFastaNrByHeiti">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="Heiti" type="s:string" />
+            <s:element minOccurs="0" maxOccurs="1" name="SveitarfelagsNr" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="findFastaNrByHeitiResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="findFastaNrByHeitiResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="findFasteignirByHeitiNr">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="HeitiNr" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="findFasteignirByHeitiNrResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="findFasteignirByHeitiNrResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getFasteignByFastaNr">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="FastaNr" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getFasteignByFastaNrResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getFasteignByFastaNrResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getLandByLandNr">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="LandNr" type="s:string" />
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+      <s:element name="getLandByLandNrResponse">
+        <s:complexType>
+          <s:sequence>
+            <s:element minOccurs="0" maxOccurs="1" name="getLandByLandNrResult">
+              <s:complexType>
+                <s:sequence>
+                  <s:element ref="s:schema" />
+                  <s:any />
+                </s:sequence>
+              </s:complexType>
+            </s:element>
+          </s:sequence>
+        </s:complexType>
+      </s:element>
+    </s:schema>
+  </wsdl:types>
+  <wsdl:message name="findHeitiByHeitiSoapIn">
+    <wsdl:part name="parameters" element="tns:findHeitiByHeiti" />
+  </wsdl:message>
+  <wsdl:message name="findHeitiByHeitiSoapOut">
+    <wsdl:part name="parameters" element="tns:findHeitiByHeitiResponse" />
+  </wsdl:message>
+  <wsdl:message name="findHeitiByHeitiBillingInfo">
+    <wsdl:part name="BillingInfo" element="tns:BillingInfo" />
+  </wsdl:message>
+  <wsdl:message name="findFastaNrByHeitiSoapIn">
+    <wsdl:part name="parameters" element="tns:findFastaNrByHeiti" />
+  </wsdl:message>
+  <wsdl:message name="findFastaNrByHeitiSoapOut">
+    <wsdl:part name="parameters" element="tns:findFastaNrByHeitiResponse" />
+  </wsdl:message>
+  <wsdl:message name="findFastaNrByHeitiBillingInfo">
+    <wsdl:part name="BillingInfo" element="tns:BillingInfo" />
+  </wsdl:message>
+  <wsdl:message name="findFasteignirByHeitiNrSoapIn">
+    <wsdl:part name="parameters" element="tns:findFasteignirByHeitiNr" />
+  </wsdl:message>
+  <wsdl:message name="findFasteignirByHeitiNrSoapOut">
+    <wsdl:part name="parameters" element="tns:findFasteignirByHeitiNrResponse" />
+  </wsdl:message>
+  <wsdl:message name="findFasteignirByHeitiNrBillingInfo">
+    <wsdl:part name="BillingInfo" element="tns:BillingInfo" />
+  </wsdl:message>
+  <wsdl:message name="getFasteignByFastaNrSoapIn">
+    <wsdl:part name="parameters" element="tns:getFasteignByFastaNr" />
+  </wsdl:message>
+  <wsdl:message name="getFasteignByFastaNrSoapOut">
+    <wsdl:part name="parameters" element="tns:getFasteignByFastaNrResponse" />
+  </wsdl:message>
+  <wsdl:message name="getFasteignByFastaNrBillingInfo">
+    <wsdl:part name="BillingInfo" element="tns:BillingInfo" />
+  </wsdl:message>
+  <wsdl:message name="getLandByLandNrSoapIn">
+    <wsdl:part name="parameters" element="tns:getLandByLandNr" />
+  </wsdl:message>
+  <wsdl:message name="getLandByLandNrSoapOut">
+    <wsdl:part name="parameters" element="tns:getLandByLandNrResponse" />
+  </wsdl:message>
+  <wsdl:message name="getLandByLandNrBillingInfo">
+    <wsdl:part name="BillingInfo" element="tns:BillingInfo" />
+  </wsdl:message>
+  <wsdl:portType name="FasteignaskraSoap">
+    <wsdl:operation name="findHeitiByHeiti">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Leit í fasteignaskrá eftir heiti fasteignar</documentation>
+      <wsdl:input message="tns:findHeitiByHeitiSoapIn" />
+      <wsdl:output message="tns:findHeitiByHeitiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="findFastaNrByHeiti">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Leit í fasteignaskrá eftir heiti og fastanúmeri fasteignar</documentation>
+      <wsdl:input message="tns:findFastaNrByHeitiSoapIn" />
+      <wsdl:output message="tns:findFastaNrByHeitiSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="findFasteignirByHeitiNr">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Sækir fasteignir eftir heitinúmeri</documentation>
+      <wsdl:input message="tns:findFasteignirByHeitiNrSoapIn" />
+      <wsdl:output message="tns:findFasteignirByHeitiNrSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getFasteignByFastaNr">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Sækir nákvæmar upplýsingar um fasteign eftir fastanúmeri</documentation>
+      <wsdl:input message="tns:getFasteignByFastaNrSoapIn" />
+      <wsdl:output message="tns:getFasteignByFastaNrSoapOut" />
+    </wsdl:operation>
+    <wsdl:operation name="getLandByLandNr">
+      <documentation xmlns="http://schemas.xmlsoap.org/wsdl/">Sækir nákvæmar upplýsingar um land eftir landnúmeri</documentation>
+      <wsdl:input message="tns:getLandByLandNrSoapIn" />
+      <wsdl:output message="tns:getLandByLandNrSoapOut" />
+    </wsdl:operation>
+  </wsdl:portType>
+  <wsdl:binding name="FasteignaskraSoap" type="tns:FasteignaskraSoap">
+    <soap:binding transport="http://schemas.xmlsoap.org/soap/http" style="document" />
+    <wsdl:operation name="findHeitiByHeiti">
+      <soap:operation soapAction="urn:landskra-wse:fasteignaskra/findHeitiByHeiti" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:findHeitiByHeitiBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:findHeitiByHeitiBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findFastaNrByHeiti">
+      <soap:operation soapAction="urn:landskra-wse:fasteignaskra/findFastaNrByHeiti" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:findFastaNrByHeitiBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:findFastaNrByHeitiBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="findFasteignirByHeitiNr">
+      <soap:operation soapAction="urn:landskra-wse:fasteignaskra/findFasteignirByHeitiNr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:findFasteignirByHeitiNrBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:findFasteignirByHeitiNrBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getFasteignByFastaNr">
+      <soap:operation soapAction="urn:landskra-wse:fasteignaskra/getFasteignByFastaNr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:getFasteignByFastaNrBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:getFasteignByFastaNrBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+    <wsdl:operation name="getLandByLandNr">
+      <soap:operation soapAction="urn:landskra-wse:fasteignaskra/getLandByLandNr" style="document" />
+      <wsdl:input>
+        <soap:body use="literal" />
+        <soap:header message="tns:getLandByLandNrBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:input>
+      <wsdl:output>
+        <soap:body use="literal" />
+        <soap:header message="tns:getLandByLandNrBillingInfo" part="BillingInfo" use="literal" />
+      </wsdl:output>
+    </wsdl:operation>
+  </wsdl:binding>
+  <wsdl:service name="Fasteignaskra">
+    <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
+    <wsdl:port name="FasteignaskraSoap" binding="tns:FasteignaskraSoap">
+      <soap:address location="http://ws-test.fmr.is/SvcFasteignaskra_0201/Fasteignaskra.asmx" />
+    </wsdl:port>
+  </wsdl:service>
+</wsdl:definitions>
