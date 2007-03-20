@@ -101,6 +101,9 @@
       <artifactId>addressing</artifactId>
       <version>1.0</version>
       <type>jar</type>
+      <properties>
+        <idegaweb.bundle.include>true</idegaweb.bundle.include>
+      </properties>
     </dependency>
 	<dependency>
       <groupId>bundles</groupId>
@@ -142,6 +145,21 @@
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
+    <resources>
+      <resource>
+       <directory>${basedir}/src/java/keys</directory>
+       <targetPath>keys</targetPath>
+        <includes>
+          <include>**/**</include>
+        </includes>
+      </resource>
+      <resource>
+        <directory>${basedir}/src/java</directory>
+        <includes>
+          <include>**/*.wsdd</include>
+        </includes>
+      </resource>
+     </resources>
   </build>
   <properties/>
 </project>
