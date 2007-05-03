@@ -56,8 +56,8 @@ public class FasteignaskraClient implements CallbackHandler {
 	private String keystorePassword = "fart";
 
 	// private String axisClientDeployConfigURI =
-	// "file:///idega/eclipse/rafverk/is.fmr.landskra/src/java/fasteignaskra/landskra_wse/client_deploy.wsdd";
-	private String axisClientDeployConfigURI = "resource://fasteignaskra/landskra_wse/client_deploy.wsdd";
+	// "file:///idega/eclipse/rafverk/is.fmr.landskra/src/java/fasteignaskra/landskra_wse/deploy_client.wsdd";
+	private String axisClientDeployConfigURI = "resource://fasteignaskra/landskra_wse/deploy_client.wsdd";
 
 	private String serviceUrl = "http://ws-test.fmr.is/SvcFasteignaskra_0201/Fasteignaskra.asmx";
 
