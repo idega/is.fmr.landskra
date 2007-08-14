@@ -2,11 +2,20 @@
 
 <project>
 	<modelVersion>4.0.0</modelVersion>
+	<parent>
+  		<groupId>com.idega.block.platform</groupId>
+  		<artifactId>com.idega.block.base</artifactId>
+  		<version>4.0-SNAPSHOT</version>
+    </parent>
 	<name>Landskra Fasteigna Integration</name>
 	<artifactId>is.fmr.landskra</artifactId>
-	<groupId>bundles</groupId>
-	<version>1.0</version>
+	<groupId>com.idega.block.custom</groupId>
+	<version>4.0-SNAPSHOT</version>
 	<inceptionYear>2007</inceptionYear>
+	<scm>
+    	<connection>scm:cvs:ext:${user.name}@code.idega.com:/idega/cvs:${groupId}/${artifactId}/</connection>
+    	<developerConnection>scm:cvs:ext:${user.name}@code.idega.com:/idega/cvs:${groupId}/${artifactId}/</developerConnection>
+  	</scm>
 	<developers>
 		<developer>
 			<name>Tryggvi Larusson</name>
@@ -17,77 +26,52 @@
 		</developer>
 	</developers>
 	<dependencies>
-		<!--dependency>
-			<groupId>bundles</groupId>
-			<artifactId>com.idega.core</artifactId>
-			<version>3.1.2</version>
-			<type>jar</type>
-			<url>http://www.idega.com/</url>
-			<properties>
-			<eclipse.dependency>true</eclipse.dependency>
-			</properties>
-			</dependency-->
-		<!--dependency>
-			<groupId>axis</groupId>
-			<artifactId>axis</artifactId>
-			<version>1.3</version>
-			<type>jar</type>
-			</dependency-->
-		<!--dependency>
-			<groupId>jaxrpc</groupId>
-			<artifactId>jaxrpc</artifactId>
-			<version>1.1</version>
-			<type>jar</type>
-			</dependency-->
-		<!--dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging</artifactId>
-			<version>1.0.4</version>
-			<type>jar</type>
-			</dependency>
-			<dependency>
-			<groupId>commons-logging</groupId>
-			<artifactId>commons-logging-api</artifactId>
-			<version>1.0.4</version>
-			<type>jar</type>
-			</dependency>
-			<dependency>
-			<groupId>commons-discovery</groupId>
-			<artifactId>commons-discovery</artifactId>
-			<version>0.2</version>
-			<type>jar</type>
-			</dependency-->
-		<!--dependency>
-			<groupId>saaj</groupId>
-			<artifactId>saaj</artifactId>
-			<version>1.2</version>
-			<type>jar</type>
-			</dependency-->
-		<!--dependency>
-			<groupId>wsdl4j</groupId>
-			<artifactId>wsdl4j</artifactId>
-			<version>1.5.1</version>
-			<type>jar</type>
-			</dependency>
-			<dependency>
-			<groupId>wss4j</groupId>
-			<artifactId>wss4j</artifactId>
-			<version>1.5.1</version>
-			<type>jar</type>
-			</dependency>
-			<dependency>
-			<groupId>xml-security</groupId>
-			<artifactId>xmlsec</artifactId>
-			<version>1.3.0</version>
-			<type>jar</type>
-			</dependency-->
-		<!--dependency>
-			<groupId>addressing</groupId>
-			<artifactId>addressing</artifactId>
-			<version>1.0</version>
-			<type>jar</type>
-			</dependency-->
-
+		<dependency>
+	      	<groupId>com.idega.block.egov</groupId>
+	      	<artifactId>is.idega.iceland</artifactId>
+	      	<version>4.0-SNAPSHOT</version>
+	      	<type>jar</type>
+	    </dependency>
+	    <dependency>
+	      	<groupId>com.idega.block.platform</groupId>
+	      	<artifactId>org.apache.axis</artifactId>
+	      	<version>1.3</version>
+	      	<type>jar</type>
+	    </dependency>
+	    <!-- 
+	    <dependency>
+	      	<groupId>jaxrpc</groupId>
+	      	<artifactId>jaxrpc</artifactId>
+	      	<version>1.1</version>
+	      	<type>jar</type>
+	    </dependency>
+	    <dependency>
+      		<groupId>saaj</groupId>
+      		<artifactId>saaj</artifactId>
+      		<version>1.2</version>
+      		<type>jar</type>
+    	</dependency>
+    	
+	     -->
+	    <dependency>
+      		<groupId>wss4j</groupId>
+      		<artifactId>wss4j</artifactId>
+      		<version>1.5.1</version>
+      		<type>jar</type>
+    	</dependency>
+    	<dependency>
+	      	<groupId>xml-security</groupId>
+	      	<artifactId>xmlsec</artifactId>
+	      	<version>1.3.0</version>
+	      	<type>jar</type>
+	    </dependency>
+	    <dependency>
+	      	<groupId>addressing</groupId>
+	      	<artifactId>addressing</artifactId>
+	      	<version>1.0</version>
+	      	<type>jar</type>
+	    </dependency>
+	    <!-- 
 		<dependency>
 			<groupId>org.codehaus.xfire</groupId>
 			<artifactId>xfire-jaxb2</artifactId>
@@ -108,8 +92,9 @@
 	  		<artifactId>xfire-generator</artifactId> 
 	 		<version>1.2.4</version> 
 	    </dependency> 
+	     -->
 	</dependencies>
-
+	<!--
 	<repositories>
 	    <repository>
 	      <id>codehaus</id>
@@ -170,4 +155,5 @@
 			</plugin>
 		</plugins>
 	</build>
+	 -->
 </project>
