@@ -1,9 +1,13 @@
 package is.fmr.landskra;
 
 import java.math.BigDecimal;
-import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -18,13 +22,22 @@ import fasteignaskra.landskra_wse.Fasteignaskra_Element;
 import fasteignaskra.landskra_wse.GetFasteignByFastaNrResponseGetFasteignByFastaNrResult;
 
 public class FasteignaskraParser {
+	
+	public static final String DATE_PATTERN = "dd/MM/yyyy";
+	
+	private static Logger getLogger() {
+		return Logger.getLogger(FasteignaskraParser.class.getName());
+	}
 
 	Element fasteignaskraElement;
 
 	Fasteignaskra_Element fasteignaskra;
+	
+	SimpleDateFormat simpleDateFormat;
 
 	public FasteignaskraParser(Element asDOM) {
 		fasteignaskraElement = asDOM;
+		simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
 		parseDom();
 	}
 
@@ -338,12 +351,15 @@ public class FasteignaskraParser {
 	}	
 	
 	private Calendar getNodeChildValueAsCalendar(Node domNode) {
-		String str = getNodeChildValueAsString(domNode);
 		Calendar calendar = new GregorianCalendar();
-		
-		Date date = Date.valueOf(str.substring(0,10));
-		
-		calendar.setTime(date);
+		String str = getNodeChildValueAsString(domNode);
+		try {
+			Date date = simpleDateFormat.parse(str);
+			calendar.setTime(date);
+		}
+		catch (ParseException e) {
+			getLogger().log(Level.WARNING, "[FasteignaSkraParser] Date could not be parsed: " + str + "Message was: " + e.getMessage());
+		}
 		return calendar; 
 	}
 

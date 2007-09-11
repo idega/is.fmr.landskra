@@ -1,7 +1,10 @@
 package is.fmr.landskra;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.apache.axis.message.MessageElement;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -12,28 +15,46 @@ import fasteignaskra.landskra_wse.HeitiHeiti;
 import fasteignaskra.landskra_wse.HeitiHeitiFastaNr;
 
 public class HeitiParser {
-
-	Element heitiElement;
-
-	Heiti heiti;
+	
+	List listOfRealEstateNumbers;
 
 	public HeitiParser(Element asDOM) {
-		heitiElement = asDOM;
-		parseDom();
+		listOfRealEstateNumbers = new ArrayList();
+		parseDom(asDOM);
 	}
 
 	public HeitiParser(FindFastaNrByHeitiResponseFindFastaNrByHeitiResult response) throws Exception {
-		this((Element)response.get_any()[1].getAsDOM().getFirstChild());
+		this(response.get_any());
+	}
+	
+	public HeitiParser(MessageElement[] messageElements) throws Exception {
+		listOfRealEstateNumbers = new ArrayList();
+		parse(messageElements);
 	}
 
-	private void parseDom() {
-		heiti = new Heiti();
-		Element heitiHeitiElement = (Element) heitiElement
-				.getFirstChild();
-		parseHeiti(heitiHeitiElement);
+	private void parse(MessageElement[] messageElements) throws Exception {
+		for (int i = 0; i < messageElements.length; i++) {
+			MessageElement messageElement = messageElements[i];
+			Element element = (Element) messageElement.getAsDOM().getFirstChild();
+			parseDom(element);
+		}
 	}
 
-	private void parseHeiti(Element eHeiti) {
+
+	private void parseDom(Element heitiElement) {
+		if (heitiElement == null) {
+			return;
+		}
+		Heiti heiti = new Heiti();
+		NodeList nodes = heitiElement.getChildNodes();
+		// nodes does not implement iterator
+		for (int i = 0; i < nodes.getLength(); i++) {
+			Element heitiHeitiElement = (Element) nodes.item(i);
+			parseHeiti(heitiHeitiElement, heiti);
+		}
+	}
+
+	private void parseHeiti(Element eHeiti, Heiti heiti) {
 		HeitiHeiti hHeiti = new HeitiHeiti();
 		heiti.setHeiti(hHeiti);
 
@@ -48,8 +69,8 @@ public class HeitiParser {
 				Integer heitinr = getNodeChildValueAsInteger(nProperty);
 				hHeiti.setHeitinr(heitinr);
 			} else if (nProperty.getNodeName().equals("heiti")) {
-				String heiti = getNodeChildValueAsString(nProperty);
-				hHeiti.setHeiti(heiti);
+				String heitiString = getNodeChildValueAsString(nProperty);
+				hHeiti.setHeiti(heitiString);
 			} else if (nProperty.getNodeName().equals("husnumer")) {
 				String husnumer = getNodeChildValueAsString(nProperty);
 				hHeiti.setHusnumer(husnumer);
@@ -75,6 +96,7 @@ public class HeitiParser {
 				String thinglysingarandlag = getNodeChildValueAsString(nProperty);
 				hHeiti.setThinglysingarandlag(thinglysingarandlag);
 			} else if (nProperty.getNodeName().equals("FastaNr")) {
+				// adds a fastnumer to the array in hheiti
 				parseFastaNr(nProperty, hHeiti);
 			}
 			
@@ -105,6 +127,7 @@ public class HeitiParser {
 			if (nProperty.getNodeName().equals("fastanr")) {
 				Integer iFastanr = getNodeChildValueAsInteger(nProperty);
 				fastanr.setFastanr(iFastanr);
+				listOfRealEstateNumbers.add(iFastanr);
 			}
 			else if (nProperty.getNodeName().equals("merking")) {
 				String merking = getNodeChildValueAsString(nProperty);
@@ -172,9 +195,13 @@ public class HeitiParser {
 		return new Integer(str);
 	}
 
-	public Heiti getHeiti() {
-		// TODO Auto-generated method stub
-		return heiti;
+//	public Heiti getHeiti() {
+//		// TODO Auto-generated method stub
+//		return heiti;
+//	}
+	
+	public List getRealEstateNumbers() {
+		return listOfRealEstateNumbers;
 	}
 
 }

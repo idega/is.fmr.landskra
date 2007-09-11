@@ -22,7 +22,7 @@ public class FasteignaskraLocator extends org.apache.axis.client.Service impleme
     }
 
     // Use to get a proxy class for FasteignaskraSoap
-    private java.lang.String FasteignaskraSoap_address = "http://ws-test.fmr.is/SvcFasteignaskra_0201/Fasteignaskra.asmx";
+    private java.lang.String FasteignaskraSoap_address = "http://ws-test.fmr.is/SvcFasteignaskra_0202/Fasteignaskra.asmx";
 
     public java.lang.String getFasteignaskraSoapAddress() {
         return FasteignaskraSoap_address;
