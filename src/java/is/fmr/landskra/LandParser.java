@@ -1,3 +1,12 @@
+/*
+ * $Id: LandParser.java,v 1.1 2007/09/14 10:39:50 thomas Exp $
+ * Created on Sep 12, 2007
+ *
+ * Copyright (C) 2007 Idega Software hf. All Rights Reserved.
+ *
+ * This software is the proprietary information of Idega hf.
+ * Use is subject to license terms.
+ */
 package is.fmr.landskra;
 
 import fasteignaskra.landskra_wse.FasteignaskraFasteign;
@@ -20,7 +29,15 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-public class FasteignaskraParser implements AnyContentParser {
+
+/**
+ * 
+ *  Last modified: $Date: 2007/09/14 10:39:50 $ by $Author: thomas $
+ * 
+ * @author <a href="mailto:thomas@idega.com">thomas</a>
+ * @version $Revision: 1.1 $
+ */
+public class LandParser implements AnyContentParser{
 	
 	public static final String DATE_PATTERN = "dd/MM/yyyy";
 	
@@ -30,20 +47,27 @@ public class FasteignaskraParser implements AnyContentParser {
 	
 	SimpleDateFormat simpleDateFormat;
 	
-	public FasteignaskraParser() {
+	public LandParser() {
 		simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
 	}
 
-//	public FasteignaskraParser(Element asDOM) {
+//	public LandParser(Element asDOM) {
 //		fasteignaskraElement = asDOM;
 //		simpleDateFormat = new SimpleDateFormat(DATE_PATTERN);
 //		parseDom();
 //	}
 //
-//	public FasteignaskraParser(GetFasteignByFastaNrResponseGetFasteignByFastaNrResult response) throws Exception {
+//	public LandParser(GetLandByLandNrResponseGetLandByLandNrResult response) throws Exception {
 //		this((Element)response.get_any()[1].getAsDOM().getFirstChild());
 //	}
-
+//
+//	private void parseDom() {
+//		fasteignaskra = new Fasteignaskra_Element();
+//		Element fasteignElement = (Element) fasteignaskraElement
+//				.getFirstChild();
+//		parseFasteign(fasteignElement);
+//	}
+	
 	public FasteignaskraFasteign parse(AnyContentType anyContentType) throws Exception {
 		Element fasteignaskraElement = (Element) anyContentType.get_any()[1].getAsDOM().getFirstChild();
 		Element fasteignElement = (Element) fasteignaskraElement.getFirstChild();
@@ -52,6 +76,7 @@ public class FasteignaskraParser implements AnyContentParser {
 
 	private FasteignaskraFasteign parseFasteign(Element eFasteign) {
 		FasteignaskraFasteign fasteign = new FasteignaskraFasteign();
+
 		NodeList fasteignElements = eFasteign.getChildNodes();
 		for (int i = 0; i < fasteignElements.getLength(); i++) {
 			Node nProperty = fasteignElements.item(i);
@@ -65,7 +90,8 @@ public class FasteignaskraParser implements AnyContentParser {
 			} else if (nProperty.getNodeName().equals("merking")) {
 				String merking = getNodeChildValueAsString(nProperty);
 				fasteign.setMerking(merking);
-			} else if (nProperty.getNodeName().equals("gotuheiti")) {
+			// be careful changed
+			} else if (nProperty.getNodeName().equals("heiti")) {
 				String gotuheiti = getNodeChildValueAsString(nProperty);
 				fasteign.setGotuheiti(gotuheiti);
 			} else if (nProperty.getNodeName().equals("husnumer")) {
@@ -100,7 +126,7 @@ public class FasteignaskraParser implements AnyContentParser {
 				fasteign.setTryggfelagsheiti(tryggfelagsheiti);
 			} else if (nProperty.getNodeName().equals("Matseining")) {
 				parseMatseining(nProperty,fasteign);
-			} else if (nProperty.getNodeName().equals("Eigandi")) {
+			} else if (nProperty.getNodeName().equals("Landeigandi")) {
 				parseEigandi(nProperty,fasteign);
 			} else if (nProperty.getNodeName().equals("Abuandi")) {
 				parseAbuandi(nProperty,fasteign);
@@ -109,6 +135,7 @@ public class FasteignaskraParser implements AnyContentParser {
 			}
 		}
 		return fasteign;
+
 	}
 	
 	private void parseMatseining(Node node, FasteignaskraFasteign fasteign) {
@@ -380,4 +407,5 @@ public class FasteignaskraParser implements AnyContentParser {
 		String str = getNodeChildValueAsString(domNode);
 		return new Integer(str);
 	}
+
 }

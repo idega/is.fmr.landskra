@@ -12,11 +12,12 @@ import org.w3c.dom.NodeList;
 import fasteignaskra.landskra_wse.FindFastaNrByHeitiResponseFindFastaNrByHeitiResult;
 import fasteignaskra.landskra_wse.Heiti;
 import fasteignaskra.landskra_wse.HeitiHeiti;
-import fasteignaskra.landskra_wse.HeitiHeitiFastaNr;
 
 public class HeitiParser {
 	
 	List listOfRealEstateNumbers;
+	
+	List listOfLandnumers;
 
 	public HeitiParser(Element asDOM) {
 		listOfRealEstateNumbers = new ArrayList();
@@ -29,6 +30,7 @@ public class HeitiParser {
 	
 	public HeitiParser(MessageElement[] messageElements) throws Exception {
 		listOfRealEstateNumbers = new ArrayList();
+		listOfLandnumers = new ArrayList();
 		parse(messageElements);
 	}
 
@@ -59,103 +61,129 @@ public class HeitiParser {
 		heiti.setHeiti(hHeiti);
 
 		NodeList children = eHeiti.getChildNodes();
+		List resultFastanumer = null;
+		String landnumer = null;
 		for (int i = 0; i < children.getLength(); i++) {
 			Node nProperty = children.item(i);
 
-			if (nProperty.getNodeName().equals("landnr")) {
-				Integer landnr = getNodeChildValueAsInteger(nProperty);
-				hHeiti.setLandnr(landnr);
-			} else if (nProperty.getNodeName().equals("heitinr")) {
-				Integer heitinr = getNodeChildValueAsInteger(nProperty);
-				hHeiti.setHeitinr(heitinr);
-			} else if (nProperty.getNodeName().equals("heiti")) {
-				String heitiString = getNodeChildValueAsString(nProperty);
-				hHeiti.setHeiti(heitiString);
-			} else if (nProperty.getNodeName().equals("husnumer")) {
-				String husnumer = getNodeChildValueAsString(nProperty);
-				hHeiti.setHusnumer(husnumer);
-			} else if (nProperty.getNodeName().equals("sveitarfelagsnr")) {
-				String sveitarfelagsnr = getNodeChildValueAsString(nProperty);
-				hHeiti.setSveitarfelagsnr(sveitarfelagsnr);
-			} else if (nProperty.getNodeName().equals("sveitarfelag")) {
-				String sveitarfelag = getNodeChildValueAsString(nProperty);
-				hHeiti.setSveitarfelag(sveitarfelag);
-			} else if (nProperty.getNodeName().equals("byggdarnr")) {
-				String byggdarnr = getNodeChildValueAsString(nProperty);
-				hHeiti.setByggdarnr(byggdarnr);
-			} else if (nProperty.getNodeName().equals("byggd")) {
-				String byggd = getNodeChildValueAsString(nProperty);
-				hHeiti.setByggd(byggd);
-			} else if (nProperty.getNodeName().equals("postnr")) {
-				String postnr = getNodeChildValueAsString(nProperty);
-				hHeiti.setPostnr(postnr);
-			} else if (nProperty.getNodeName().equals("poststod")) {
-				String poststod = getNodeChildValueAsString(nProperty);
-				hHeiti.setPoststod(poststod);
-			} else if (nProperty.getNodeName().equals("thinglysingarandlag")) {
-				String thinglysingarandlag = getNodeChildValueAsString(nProperty);
-				hHeiti.setThinglysingarandlag(thinglysingarandlag);
-			} else if (nProperty.getNodeName().equals("FastaNr")) {
+//			if (nProperty.getNodeName().equals("landnr")) {
+//				Integer landnr = getNodeChildValueAsInteger(nProperty);
+//				hHeiti.setLandnr(landnr);
+//			} else if (nProperty.getNodeName().equals("heitinr")) {
+//				Integer heitinr = getNodeChildValueAsInteger(nProperty);
+//				hHeiti.setHeitinr(heitinr);
+//			} else if (nProperty.getNodeName().equals("heiti")) {
+//				String heitiString = getNodeChildValueAsString(nProperty);
+//				hHeiti.setHeiti(heitiString);
+//			} else if (nProperty.getNodeName().equals("husnumer")) {
+//				String husnumer = getNodeChildValueAsString(nProperty);
+//				hHeiti.setHusnumer(husnumer);
+//			} else if (nProperty.getNodeName().equals("sveitarfelagsnr")) {
+//				String sveitarfelagsnr = getNodeChildValueAsString(nProperty);
+//				hHeiti.setSveitarfelagsnr(sveitarfelagsnr);
+//			} else if (nProperty.getNodeName().equals("sveitarfelag")) {
+//				String sveitarfelag = getNodeChildValueAsString(nProperty);
+//				hHeiti.setSveitarfelag(sveitarfelag);
+//			} else if (nProperty.getNodeName().equals("byggdarnr")) {
+//				String byggdarnr = getNodeChildValueAsString(nProperty);
+//				hHeiti.setByggdarnr(byggdarnr);
+//			} else if (nProperty.getNodeName().equals("byggd")) {
+//				String byggd = getNodeChildValueAsString(nProperty);
+//				hHeiti.setByggd(byggd);
+//			} else if (nProperty.getNodeName().equals("postnr")) {
+//				String postnr = getNodeChildValueAsString(nProperty);
+//				hHeiti.setPostnr(postnr);
+//			} else if (nProperty.getNodeName().equals("poststod")) {
+//				String poststod = getNodeChildValueAsString(nProperty);
+//				hHeiti.setPoststod(poststod);
+//			} else if (nProperty.getNodeName().equals("thinglysingarandlag")) {
+//				String thinglysingarandlag = getNodeChildValueAsString(nProperty);
+//				hHeiti.setThinglysingarandlag(thinglysingarandlag);
+//			} else if (nProperty.getNodeName().equals("FastaNr")) {
+//				// adds a fastnumer to the array in hheiti
+//				parseFastaNr(nProperty, hHeiti);
+//			}
+			if (nProperty.getNodeName().equals("FastaNr")) {
 				// adds a fastnumer to the array in hheiti
-				parseFastaNr(nProperty, hHeiti);
+				resultFastanumer = parseFastaNr(nProperty, hHeiti);
+			} 
+			else if (nProperty.getNodeName().equals("landnr")) {
+				landnumer = getNodeChildValueAsString(nProperty);
 			}
-			
-
 		}
-
+		if (resultFastanumer != null) {
+			// if there are fastanumers as subnodes do not use the landnumer
+			listOfRealEstateNumbers.addAll(resultFastanumer);
+		}
+		else if (landnumer != null) {
+			// no fastanumers? use at least the landnumer
+			listOfLandnumers.add(landnumer);
+		}
 	}
 
-	private void parseFastaNr(Node node, HeitiHeiti heiti) {
-		HeitiHeitiFastaNr fastanr = new HeitiHeitiFastaNr();
-		HeitiHeitiFastaNr[] fastanumers = heiti.getFastaNr();
-		if(fastanumers==null){
-			fastanumers = new HeitiHeitiFastaNr[1];
-			fastanumers[0]=fastanr;
-		}
-		else{
-			HeitiHeitiFastaNr[] fastanumersnew = new HeitiHeitiFastaNr[fastanumers.length+1];
-			System.arraycopy(fastanumers, 0, fastanumersnew, 0, fastanumers.length);
-			fastanumersnew[fastanumers.length]=fastanr;
-			fastanumers = fastanumersnew;
-		}
-		heiti.setFastaNr(fastanumers);
+	/**
+	 * returns true if at least one fastanumer was found else false
+	 * 
+	 * @param node
+	 * @param heiti
+	 * @return
+	 */
+	private List parseFastaNr(Node node, HeitiHeiti heiti) {
+		List result = null;
+//		HeitiHeitiFastaNr fastanr = new HeitiHeitiFastaNr();
+//		HeitiHeitiFastaNr[] fastanumers = heiti.getFastaNr();
+//		if(fastanumers==null){
+//			fastanumers = new HeitiHeitiFastaNr[1];
+//			fastanumers[0]=fastanr;
+//		}
+//		else{
+//			HeitiHeitiFastaNr[] fastanumersnew = new HeitiHeitiFastaNr[fastanumers.length+1];
+//			System.arraycopy(fastanumers, 0, fastanumersnew, 0, fastanumers.length);
+//			fastanumersnew[fastanumers.length]=fastanr;
+//			fastanumers = fastanumersnew;
+//		}
+//		heiti.setFastaNr(fastanumers);
 		
 		NodeList nodeElements = node.getChildNodes();
 		for (int i = 0; i < nodeElements.getLength(); i++) {
 			Node nProperty = nodeElements.item(i);
 
 			if (nProperty.getNodeName().equals("fastanr")) {
-				Integer iFastanr = getNodeChildValueAsInteger(nProperty);
-				fastanr.setFastanr(iFastanr);
-				listOfRealEstateNumbers.add(iFastanr);
+				String iFastanr = getNodeChildValueAsString(nProperty);
+//				fastanr.setFastanr(iFastanr);
+				if (result == null) {
+					result = new ArrayList();
+				}
+				result.add(iFastanr);
 			}
-			else if (nProperty.getNodeName().equals("merking")) {
-				String merking = getNodeChildValueAsString(nProperty);
-				fastanr.setMerking(merking);
-			} else if (nProperty.getNodeName().equals("heitinr")) {
-				Integer heitinr = getNodeChildValueAsInteger(nProperty);
-				fastanr.setHeitinr(heitinr);
-			} else if (nProperty.getNodeName().equals("notkunarlykill")) {
-				Short notkunarlykill = getNodeChildValueAsShort(nProperty);
-				fastanr.setNotkunarlykill(notkunarlykill);
-			} else if (nProperty.getNodeName().equals("notkun")) {
-				String notkun = getNodeChildValueAsString(nProperty);
-				fastanr.setNotkun(notkun);
-			} else if (nProperty.getNodeName().equals("byggingarar")) {
-				String byggingarar = getNodeChildValueAsString(nProperty);
-				fastanr.setByggingarar(byggingarar);
-			} else if (nProperty.getNodeName().equals("flatarmalseining")) {
-				String flatarmalseining = getNodeChildValueAsString(nProperty);
-				fastanr.setFlatarmalseining(flatarmalseining);
-			} else if (nProperty.getNodeName().equals("flatarmal")) {
-				BigDecimal flatarmal = getNodeChildValueAsBigDecimal(nProperty);
-				fastanr.setFlatarmal(flatarmal);
-			} else if (nProperty.getNodeName().equals("thinglysingarandlag")) {
-				String thinglysingarandlag = getNodeChildValueAsString(nProperty);
-				fastanr.setThinglysingarandlag(thinglysingarandlag);
-			}
+//			else if (nProperty.getNodeName().equals("merking")) {
+//				String merking = getNodeChildValueAsString(nProperty);
+//				fastanr.setMerking(merking);
+//			} else if (nProperty.getNodeName().equals("heitinr")) {
+//				Integer heitinr = getNodeChildValueAsInteger(nProperty);
+//				fastanr.setHeitinr(heitinr);
+//			} else if (nProperty.getNodeName().equals("notkunarlykill")) {
+//				Short notkunarlykill = getNodeChildValueAsShort(nProperty);
+//				fastanr.setNotkunarlykill(notkunarlykill);
+//			} else if (nProperty.getNodeName().equals("notkun")) {
+//				String notkun = getNodeChildValueAsString(nProperty);
+//				fastanr.setNotkun(notkun);
+//			} else if (nProperty.getNodeName().equals("byggingarar")) {
+//				String byggingarar = getNodeChildValueAsString(nProperty);
+//				fastanr.setByggingarar(byggingarar);
+//			} else if (nProperty.getNodeName().equals("flatarmalseining")) {
+//				String flatarmalseining = getNodeChildValueAsString(nProperty);
+//				fastanr.setFlatarmalseining(flatarmalseining);
+//			} else if (nProperty.getNodeName().equals("flatarmal")) {
+//				BigDecimal flatarmal = getNodeChildValueAsBigDecimal(nProperty);
+//				fastanr.setFlatarmal(flatarmal);
+//			} else if (nProperty.getNodeName().equals("thinglysingarandlag")) {
+//				String thinglysingarandlag = getNodeChildValueAsString(nProperty);
+//				fastanr.setThinglysingarandlag(thinglysingarandlag);
+//			}
 			
 		}
+		return result;
 		
 	}
 
@@ -202,6 +230,10 @@ public class HeitiParser {
 	
 	public List getRealEstateNumbers() {
 		return listOfRealEstateNumbers;
+	}
+	
+	public List getLandNumbers() {
+		return listOfLandnumers;
 	}
 
 }
