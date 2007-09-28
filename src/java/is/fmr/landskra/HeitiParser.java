@@ -10,8 +10,6 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import fasteignaskra.landskra_wse.FindFastaNrByHeitiResponseFindFastaNrByHeitiResult;
-import fasteignaskra.landskra_wse.Heiti;
-import fasteignaskra.landskra_wse.HeitiHeiti;
 
 public class HeitiParser {
 	
@@ -19,7 +17,7 @@ public class HeitiParser {
 	
 	List listOfLandnumers;
 
-	public HeitiParser(Element asDOM) {
+	public HeitiParser(Element asDOM, Integer streetNumber) {
 		listOfRealEstateNumbers = new ArrayList();
 		parseDom(asDOM);
 	}
@@ -47,18 +45,16 @@ public class HeitiParser {
 		if (heitiElement == null) {
 			return;
 		}
-		Heiti heiti = new Heiti();
+		//Heiti heiti = new Heiti();
 		NodeList nodes = heitiElement.getChildNodes();
 		// nodes does not implement iterator
 		for (int i = 0; i < nodes.getLength(); i++) {
 			Element heitiHeitiElement = (Element) nodes.item(i);
-			parseHeiti(heitiHeitiElement, heiti);
+			parseHeiti(heitiHeitiElement);
 		}
 	}
 
-	private void parseHeiti(Element eHeiti, Heiti heiti) {
-		HeitiHeiti hHeiti = new HeitiHeiti();
-		heiti.setHeiti(hHeiti);
+	private void parseHeiti(Element eHeiti) {
 
 		NodeList children = eHeiti.getChildNodes();
 		List resultFastanumer = null;
@@ -75,9 +71,13 @@ public class HeitiParser {
 //			} else if (nProperty.getNodeName().equals("heiti")) {
 //				String heitiString = getNodeChildValueAsString(nProperty);
 //				hHeiti.setHeiti(heitiString);
-//			} else if (nProperty.getNodeName().equals("husnumer")) {
+//			} else 
+//			if (nProperty.getNodeName().equals("husnumer")) {
 //				String husnumer = getNodeChildValueAsString(nProperty);
-//				hHeiti.setHusnumer(husnumer);
+//				Integer response = FasteignaskraClient.parseResponseStreetNumber(husnumer);
+//				response.hashCode();
+//				//hHeiti.setHusnumer(husnumer);
+//			}
 //			} else if (nProperty.getNodeName().equals("sveitarfelagsnr")) {
 //				String sveitarfelagsnr = getNodeChildValueAsString(nProperty);
 //				hHeiti.setSveitarfelagsnr(sveitarfelagsnr);
@@ -105,7 +105,13 @@ public class HeitiParser {
 //			}
 			if (nProperty.getNodeName().equals("FastaNr")) {
 				// adds a fastnumer to the array in hheiti
-				resultFastanumer = parseFastaNr(nProperty, hHeiti);
+				List fastanumer = parseFastaNr(nProperty);
+				if (resultFastanumer == null) {
+					resultFastanumer = fastanumer;
+				}
+				else {
+					resultFastanumer.addAll(fastanumer);
+				}
 			} 
 			else if (nProperty.getNodeName().equals("landnr")) {
 				landnumer = getNodeChildValueAsString(nProperty);
@@ -128,7 +134,7 @@ public class HeitiParser {
 	 * @param heiti
 	 * @return
 	 */
-	private List parseFastaNr(Node node, HeitiHeiti heiti) {
+	private List parseFastaNr(Node node) {
 		List result = null;
 //		HeitiHeitiFastaNr fastanr = new HeitiHeitiFastaNr();
 //		HeitiHeitiFastaNr[] fastanumers = heiti.getFastaNr();

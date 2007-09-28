@@ -22,6 +22,8 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.security.auth.callback.Callback;
 import javax.security.auth.callback.CallbackHandler;
@@ -102,6 +104,8 @@ public class FasteignaskraClient implements CallbackHandler {
 	
 	private static String CURRENT_URN = URN;
 	
+	private static Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
+	
 	// switching to test
 	static {
 		if (CURRENT_IS_TEST) {
@@ -111,6 +115,55 @@ public class FasteignaskraClient implements CallbackHandler {
 			CURRENT_SERVICE_URL = TEST_SERVICE_URL;
 			CURRENT_URN = TEST_URN;
 		}
+	}
+	
+	public static Integer parseResponseStreetNumber(String responseStreetNumber) {
+		return parseNumber(responseStreetNumber);	
+	}
+	
+	public static Integer parseStreetNumber(String streetnumber) {
+		return parseNumber(streetnumber);
+	}
+		
+	private static Integer parseNumber(String streetnumber) {
+		if (streetnumber == null) {
+			return new Integer(-1);
+		}
+		Matcher matcher = NUMBER_PATTERN.matcher(streetnumber);
+		if (matcher.find()) {
+			String number = matcher.group();
+			try {
+				return new Integer(number);
+			}
+			catch (NumberFormatException ex) {
+				// not bad, do not use a streetnumber
+			}
+		}
+		return new Integer(-1);
+	}
+	
+	public static Integer parseNumberForSorting(String streetnumber) {
+		if (streetnumber == null) {
+			return new Integer(-1);
+		}
+		Matcher matcher = NUMBER_PATTERN.matcher(streetnumber);
+		if (matcher.find()) {
+			String number = matcher.group();
+			try {
+				int numberInt = Integer.parseInt(number);
+				numberInt = numberInt * 100;
+				int k = matcher.end();
+				if (k < streetnumber.length()) {
+					char c = streetnumber.charAt(k);
+					numberInt = numberInt + c;
+				}
+				return new Integer(numberInt);
+			}
+			catch (NumberFormatException ex) {
+				// not bad, do not use a streetnumber
+			}
+		}
+		return new Integer(-1);
 	}
 
 	private String cryptoPropertiesFilePath = CURRENT_CRYPTO_PROPERTIES_PATH;
@@ -133,34 +186,22 @@ public class FasteignaskraClient implements CallbackHandler {
 	
 
 	public List getFasteignirByHeitiAndPostnumer(
-			String heitiStr, String postnumer) throws Exception {
+			String streetName, 
+			Integer searchStreetNumber,
+			String postnumer) throws Exception {
 
 		String sveitarfelagsnr = SveitarfelagsUtil
 				.getSveitarfelagsnrFromPostnumer(postnumer);
-		return getFasteignirByHeiti(heitiStr, sveitarfelagsnr);
+		return getFasteignirByHeiti(streetName, searchStreetNumber, sveitarfelagsnr);
 
 	}
 
-	public List getFasteignirByHeiti(String heitiStr,
+	public List getFasteignirByHeiti(
+			String streetName, 
+			Integer searchStreetNumber,
 			String sveitarfelagsNr) throws Exception {
 
-		HeitiParser heitiParser = findFastaNrByHeiti(heitiStr, sveitarfelagsNr);
-		//Heiti heiti = findFastaNrByHeiti(heitiStr, sveitarfelagsNr);
-		//HeitiHeitiFastaNr[] fastanumers = heiti.getHeiti().getFastaNr();
-
-		//Fasteignaskra_Element[] skras = null;
-
-		/*
-		if (fastanumers != null) {
-			skras = new Fasteignaskra_Element[fastanumers.length];
-			for (int i = 0; i < fastanumers.length; i++) {
-				HeitiHeitiFastaNr hFastanr = fastanumers[i];
-				String fastanr = hFastanr.getFastanr().toString();
-				Fasteignaskra_Element fasteignaskra = getFasteignByFastaNr(fastanr);
-				skras[i] = fasteignaskra;
-			}
-		}
-		*/
+		HeitiParser heitiParser = findFastaNrByHeiti(streetName, searchStreetNumber, sveitarfelagsNr);
 		
 		List landNumbers = heitiParser.getLandNumbers();
 		List realEstateNumbers = heitiParser.getRealEstateNumbers();
@@ -203,25 +244,34 @@ public class FasteignaskraClient implements CallbackHandler {
 		return parser.parse(response);
 	}
 
-	public HeitiParser findFastaNrByHeiti(String heitiStr, String sveitarfelagsNr)
+	public HeitiParser findFastaNrByHeiti(String streetName, Integer searchStreetNumber, String sveitarfelagsNr)
 			throws Exception {
 
 		if (sveitarfelagsNr == null) {
 			sveitarfelagsNr = "";
 		}
 
-		if (StringHandler.isEmpty(heitiStr)) {
+		
+		boolean streetNumberNotEmpty = (searchStreetNumber.intValue() != -1);
+		boolean streetNotEmpty = StringHandler.isNotEmpty(streetName);
+		if ((!streetNotEmpty) && (!streetNumberNotEmpty)) {
 			return null;
 		}
-		
+		StringBuffer buffer = new StringBuffer();
+		if (streetNotEmpty) {
+			buffer.append(streetName);
+		}
+		if (streetNotEmpty && streetNumberNotEmpty) {
+			buffer.append(" ");
+		}
+		if (streetNumberNotEmpty) {
+			buffer.append(searchStreetNumber.toString());
+		}
 		FasteignaskraSoap port = getService();
 		FindFastaNrByHeitiResponseFindFastaNrByHeitiResult response = port
-				.findFastaNrByHeiti(heitiStr, sveitarfelagsNr);
+				.findFastaNrByHeiti(buffer.toString(), sveitarfelagsNr);
 
 		return new HeitiParser(response);
-		//return parser.getRealEstateNumbers();
-		//Heiti heiti = parser.getHeiti();
-		//return heiti;
 	}
 
 	public void executeTest(String[] args) throws Exception {
@@ -230,7 +280,6 @@ public class FasteignaskraClient implements CallbackHandler {
 		System.setProperty("http.proxyPort", "8080");
 
 		// String searchString = "Hringbraut";
-		String searchString = "Engjavegur 6";
 		// String searchString = "Hávallagata 13";
 		// String sveitarfelagsNr = "0000";
 		String sveitarfelagsNr = null;
@@ -246,7 +295,7 @@ public class FasteignaskraClient implements CallbackHandler {
 		 */
 
 		// Fasteignaskra_Element skra = getFasteignByFastaNr(fastanumer);
-		List fasteignir = getFasteignirByHeiti(searchString,
+		List fasteignir = getFasteignirByHeiti("Engjavegur" , new Integer(6),
 				sveitarfelagsNr);
 
 		Iterator iterator = fasteignir.iterator();
