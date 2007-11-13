@@ -1,5 +1,5 @@
 /*
- * $Id: LandParser.java,v 1.1 2007/09/14 10:39:50 thomas Exp $
+ * $Id: LandParser.java,v 1.2 2007/11/13 16:27:38 thomas Exp $
  * Created on Sep 12, 2007
  *
  * Copyright (C) 2007 Idega Software hf. All Rights Reserved.
@@ -32,12 +32,12 @@ import org.w3c.dom.NodeList;
 
 /**
  * 
- *  Last modified: $Date: 2007/09/14 10:39:50 $ by $Author: thomas $
+ *  Last modified: $Date: 2007/11/13 16:27:38 $ by $Author: thomas $
  * 
  * @author <a href="mailto:thomas@idega.com">thomas</a>
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  */
-public class LandParser implements AnyContentParser{
+public class LandParser {
 	
 	public static final String DATE_PATTERN = "dd/MM/yyyy";
 	

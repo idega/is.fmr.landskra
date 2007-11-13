@@ -3,7 +3,6 @@
  */
 package is.fmr.landskra;
 
-import fasteignaskra.landskra_wse.FasteignaskraFasteign;
 import fasteignaskra.landskra_wse.FasteignaskraLocator;
 import fasteignaskra.landskra_wse.FasteignaskraSoap;
 import fasteignaskra.landskra_wse.FindFastaNrByHeitiResponseFindFastaNrByHeitiResult;
@@ -22,6 +21,7 @@ import java.net.URISyntaxException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -130,6 +130,7 @@ public class FasteignaskraClient implements CallbackHandler {
 			return new Integer(-1);
 		}
 		Matcher matcher = NUMBER_PATTERN.matcher(streetnumber);
+		// look for "12-14", use only "12"
 		if (matcher.find()) {
 			String number = matcher.group();
 			try {
@@ -175,6 +176,12 @@ public class FasteignaskraClient implements CallbackHandler {
 	private String axisClientDeployConfigURI = "resource://fasteignaskra/landskra_wse/deploy_client.wsdd";
 
 	private String serviceUrl = CURRENT_SERVICE_URL;
+	
+	private SveitarfelagsUtil sveitarfelagsUtil;
+	
+	private RealEstateAndLandParser realEstateAndLandParser;
+	
+	private HeitiParser heitiParser;
 
 	/**
 	 * @param args
@@ -190,72 +197,96 @@ public class FasteignaskraClient implements CallbackHandler {
 			Integer searchStreetNumber,
 			String postnumer) throws Exception {
 
-		String sveitarfelagsnr = SveitarfelagsUtil
+		Set sveitarfelagsnr = getSveitarfelagsUtil()
 				.getSveitarfelagsnrFromPostnumer(postnumer);
-		return getFasteignirByHeiti(streetName, searchStreetNumber, sveitarfelagsnr);
+		return getFasteignirByHeiti(streetName, searchStreetNumber, sveitarfelagsnr, postnumer);
 
 	}
 
 	public List getFasteignirByHeiti(
 			String streetName, 
 			Integer searchStreetNumber,
-			String sveitarfelagsNr) throws Exception {
-
-		HeitiParser heitiParser = findFastaNrByHeiti(streetName, searchStreetNumber, sveitarfelagsNr);
+			Set sveitarfelagsNr,
+			String postnumer) throws Exception {
 		
-		List landNumbers = heitiParser.getLandNumbers();
-		List realEstateNumbers = heitiParser.getRealEstateNumbers();
-		
-		List fasteignaSkraList = new ArrayList(realEstateNumbers.size() + landNumbers.size());
-
-
-		AnyContentParser landParser = new LandParser();
-		Iterator iterator = landNumbers.iterator();
-		while (iterator.hasNext()) {
-			String landNumber = (String) iterator.next();
-			FasteignaskraFasteign fasteignaskra = getLandByLandNr(landNumber, landParser);
-			fasteignaSkraList.add(fasteignaskra);
+		// check all sveitarfelagsNr
+		if (sveitarfelagsNr == null || sveitarfelagsNr.isEmpty()) {
+			return null;
 		}
 		
-		AnyContentParser fasteignaskraParser = new FasteignaskraParser();
+		FasteignaskraSoap port = getService();
+
+		HeitiParser parser = getHeitiParser();
+		// for safety reasons reset again
+		parser.reset();
+		Iterator iterator = sveitarfelagsNr.iterator();
+		boolean someResults = false;
+		while (iterator.hasNext()) {
+			String sveitarfelagsNumber = (String) iterator.next();
+			someResults = findFastaNrByHeiti(streetName, searchStreetNumber, sveitarfelagsNumber, port, parser);
+		}
+		if (! someResults) {
+			return null;
+		}
+		
+		List landNumbers = parser.getLandNumbers();
+		List realEstateNumbers = parser.getRealEstateNumbers();
+		
+		List result = new ArrayList(realEstateNumbers.size() + landNumbers.size());
+		
+		// save memory
+		parser.reset();
+
+		RealEstateAndLandParser realEstateAndLandParser = getRealEstateAndLandParser();
+
+		Iterator landNumberIterator = landNumbers.iterator();
+		while (landNumberIterator.hasNext()) {
+			String landNumber = (String) landNumberIterator.next();
+			getLandByLandNr(result, landNumber, postnumer, realEstateAndLandParser, port);
+		}
+		
+
 		Iterator realEstateNumbersIterator = realEstateNumbers.iterator();
 		while (realEstateNumbersIterator.hasNext()) {
 			String realEstateNumber = (String) realEstateNumbersIterator.next();
-			FasteignaskraFasteign fasteignaskra = getFasteignByFastaNr(realEstateNumber, fasteignaskraParser);
-			fasteignaSkraList.add(fasteignaskra);
+			getFasteignByFastaNr(result, realEstateNumber, postnumer, realEstateAndLandParser, port);
 		}
 		
-		return fasteignaSkraList;
+		return result;
 	}
 	
-	public FasteignaskraFasteign getLandByLandNr(String landnumer, AnyContentParser parser) throws Exception {
-		FasteignaskraSoap port = getService();
+	public void getLandByLandNr(List result,String landnumer, String postnumer, RealEstateAndLandParser parser, FasteignaskraSoap port) throws Exception {
 		GetLandByLandNrResponseGetLandByLandNrResult response = port
 			.getLandByLandNr(landnumer);
-		return parser.parse(response);
+		parser.parseLand(result, response, postnumer);
 	}
 
-	public FasteignaskraFasteign getFasteignByFastaNr(String fastanumer, AnyContentParser parser)
+	public void getFasteignByFastaNr(List result, String fastanumer, String postnumer,  RealEstateAndLandParser parser, FasteignaskraSoap port)
 			throws Exception {
-
-		FasteignaskraSoap port = getService();
 		GetFasteignByFastaNrResponseGetFasteignByFastaNrResult response = port
 				.getFasteignByFastaNr(fastanumer);
-		return parser.parse(response);
+		parser.parseRealEstate(result, response, postnumer);
 	}
 
-	public HeitiParser findFastaNrByHeiti(String streetName, Integer searchStreetNumber, String sveitarfelagsNr)
+	/*
+	 * Returns true if something was parsed else false
+	 */
+	public boolean findFastaNrByHeiti(
+			String streetName, 
+			Integer searchStreetNumber, 
+			String sveitarfelagsNr, 
+			FasteignaskraSoap port,
+			HeitiParser parser)
 			throws Exception {
 
 		if (sveitarfelagsNr == null) {
 			sveitarfelagsNr = "";
 		}
-
 		
 		boolean streetNumberNotEmpty = (searchStreetNumber.intValue() != -1);
 		boolean streetNotEmpty = StringHandler.isNotEmpty(streetName);
 		if ((!streetNotEmpty) && (!streetNumberNotEmpty)) {
-			return null;
+			return false;
 		}
 		StringBuffer buffer = new StringBuffer();
 		if (streetNotEmpty) {
@@ -267,45 +298,44 @@ public class FasteignaskraClient implements CallbackHandler {
 		if (streetNumberNotEmpty) {
 			buffer.append(searchStreetNumber.toString());
 		}
-		FasteignaskraSoap port = getService();
 		FindFastaNrByHeitiResponseFindFastaNrByHeitiResult response = port
 				.findFastaNrByHeiti(buffer.toString(), sveitarfelagsNr);
-
-		return new HeitiParser(response);
+		parser.parse(response);
+		return true;
 	}
 
 	public void executeTest(String[] args) throws Exception {
 
-		System.setProperty("http.proxyHost", "localhost");
-		System.setProperty("http.proxyPort", "8080");
-
-		// String searchString = "Hringbraut";
-		// String searchString = "Hávallagata 13";
-		// String sveitarfelagsNr = "0000";
-		String sveitarfelagsNr = null;
-
-		// String fastanumer = "2111170";
-		// Havallagata 13: 101
-		// String fastanumer = "2003728";
-
-		/*
-		 * MessageElement[] array = response.get_any(); for (int i = 0; i <
-		 * array.length; i++) { MessageElement element = array[i];
-		 * System.out.println("Element: "+i+": "+element.getAsString()); }
-		 */
-
-		// Fasteignaskra_Element skra = getFasteignByFastaNr(fastanumer);
-		List fasteignir = getFasteignirByHeiti("Engjavegur" , new Integer(6),
-				sveitarfelagsNr);
-
-		Iterator iterator = fasteignir.iterator();
-		while (iterator.hasNext()) {
-			FasteignaskraFasteign skra = (FasteignaskraFasteign) iterator.next();
-			System.out.println("Fasteign med fastanumer: "
-					+ skra.getFastanr() + " með fyrsta eiganda: "
-					+ skra.getEigandi()[0].getNafn() + ", kt: "
-					+ skra.getEigandi()[0].getKennitala());
-		}
+//		System.setProperty("http.proxyHost", "localhost");
+//		System.setProperty("http.proxyPort", "8080");
+//
+//		// String searchString = "Hringbraut";
+//		// String searchString = "Hávallagata 13";
+//		// String sveitarfelagsNr = "0000";
+//		String sveitarfelagsNr = null;
+//
+//		// String fastanumer = "2111170";
+//		// Havallagata 13: 101
+//		// String fastanumer = "2003728";
+//
+//		/*
+//		 * MessageElement[] array = response.get_any(); for (int i = 0; i <
+//		 * array.length; i++) { MessageElement element = array[i];
+//		 * System.out.println("Element: "+i+": "+element.getAsString()); }
+//		 */
+//
+//		// Fasteignaskra_Element skra = getFasteignByFastaNr(fastanumer);
+//		List fasteignir = getFasteignirByHeiti("Engjavegur" , new Integer(6),
+//				sveitarfelagsNr);
+//
+//		Iterator iterator = fasteignir.iterator();
+//		while (iterator.hasNext()) {
+//			FasteignaskraFasteign skra = (FasteignaskraFasteign) iterator.next();
+//			System.out.println("Fasteign med fastanumer: "
+//					+ skra.getFastanr() + " með fyrsta eiganda: "
+//					+ skra.getEigandi()[0].getNafn() + ", kt: "
+//					+ skra.getEigandi()[0].getKennitala());
+//		}
 
 	}
 
@@ -509,4 +539,24 @@ public class FasteignaskraClient implements CallbackHandler {
 		return serviceUrl;
 	}
 
+	private SveitarfelagsUtil getSveitarfelagsUtil() {
+		if (sveitarfelagsUtil == null) {
+			sveitarfelagsUtil = SveitarfelagsUtil.getInstance();
+		}
+		return sveitarfelagsUtil;
+	}
+	
+	private RealEstateAndLandParser getRealEstateAndLandParser() {
+		if (realEstateAndLandParser == null) {
+			realEstateAndLandParser = new RealEstateAndLandParser();
+		}
+		return realEstateAndLandParser;
+	}
+	
+	private HeitiParser getHeitiParser() {
+		if (heitiParser == null) {
+			heitiParser = new HeitiParser();
+		}
+		return heitiParser;
+	}
 }

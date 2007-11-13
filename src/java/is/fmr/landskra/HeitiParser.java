@@ -1,6 +1,5 @@
 package is.fmr.landskra;
 
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,20 +15,20 @@ public class HeitiParser {
 	List listOfRealEstateNumbers;
 	
 	List listOfLandnumers;
-
-	public HeitiParser(Element asDOM, Integer streetNumber) {
-		listOfRealEstateNumbers = new ArrayList();
-		parseDom(asDOM);
-	}
-
-	public HeitiParser(FindFastaNrByHeitiResponseFindFastaNrByHeitiResult response) throws Exception {
-		this(response.get_any());
+	
+	public void parse(FindFastaNrByHeitiResponseFindFastaNrByHeitiResult response) throws Exception {
+		if (listOfLandnumers == null) {
+			listOfLandnumers = new ArrayList();
+		}
+		if (listOfRealEstateNumbers == null) {
+			listOfRealEstateNumbers = new ArrayList();
+		}
+		parse(response.get_any());
 	}
 	
-	public HeitiParser(MessageElement[] messageElements) throws Exception {
-		listOfRealEstateNumbers = new ArrayList();
-		listOfLandnumers = new ArrayList();
-		parse(messageElements);
+	public void reset() {
+		listOfRealEstateNumbers = null;
+		listOfLandnumers = null;
 	}
 
 	private void parse(MessageElement[] messageElements) throws Exception {
@@ -204,16 +203,16 @@ public class HeitiParser {
 		return calendar; 
 	}
 	*/
-
-	private BigDecimal getNodeChildValueAsBigDecimal(Node domNode) {
-		String str = getNodeChildValueAsString(domNode);
-		return new BigDecimal(str);
-	}
-
-	private Short getNodeChildValueAsShort(Node domNode) {
-		String str = getNodeChildValueAsString(domNode);
-		return new Short(str);
-	}
+//
+//	private BigDecimal getNodeChildValueAsBigDecimal(Node domNode) {
+//		String str = getNodeChildValueAsString(domNode);
+//		return new BigDecimal(str);
+//	}
+//
+//	private Short getNodeChildValueAsShort(Node domNode) {
+//		String str = getNodeChildValueAsString(domNode);
+//		return new Short(str);
+//	}
 
 	private String getNodeChildValueAsString(Node domNode) {
 		Node firstChild = domNode.getFirstChild();
@@ -224,10 +223,10 @@ public class HeitiParser {
 		return str;
 	}
 
-	private Integer getNodeChildValueAsInteger(Node domNode) {
-		String str = getNodeChildValueAsString(domNode);
-		return new Integer(str);
-	}
+//	private Integer getNodeChildValueAsInteger(Node domNode) {
+//		String str = getNodeChildValueAsString(domNode);
+//		return new Integer(str);
+//	}
 
 //	public Heiti getHeiti() {
 //		// TODO Auto-generated method stub
