@@ -105,7 +105,7 @@
         <idegaweb.bundle.include>true</idegaweb.bundle.include>
       </properties>
     </dependency>
-	<dependency>
+    <dependency>
       <groupId>bundles</groupId>
       <artifactId>is.idega.iceland</artifactId>
       <version>1.1</version>
@@ -142,13 +142,14 @@
         <idegaweb.bundle.include>true</idegaweb.bundle.include>
       </properties>
     </dependency-->
+
   </dependencies>
   <build>
     <sourceDirectory>src/java</sourceDirectory>
     <resources>
       <resource>
-       <directory>${basedir}/src/java/keys</directory>
-       <targetPath>keys</targetPath>
+        <directory>${basedir}/src/java/keys</directory>
+        <targetPath>keys</targetPath>
         <includes>
           <include>**/**</include>
         </includes>
@@ -159,7 +160,14 @@
           <include>**/*.wsdd</include>
         </includes>
       </resource>
-     </resources>
+    </resources>
   </build>
   <properties/>
+  <versions>
+    <version>
+      <id>1.1</id>
+      <name>1.1</name>
+      <tag>FMR_1_1</tag>
+    </version>
+  </versions>
 </project>
