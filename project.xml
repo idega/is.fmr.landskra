@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>Landskra Fasteigna Integration</name>
   <artifactId>is.fmr.landskra</artifactId>
-  <currentVersion>3.1-SNAPSHOT</currentVersion>
+  <currentVersion>1.1</currentVersion>
   <inceptionYear>2007</inceptionYear>
   <shortDescription>Integration with FMR - Landskra Fasteigna</shortDescription>
   <developers>
@@ -108,7 +108,7 @@
 	<dependency>
       <groupId>bundles</groupId>
       <artifactId>is.idega.iceland</artifactId>
-      <version>SNAPSHOT</version>
+      <version>1.1</version>
       <type>jar</type>
       <properties>
         <eclipse.dependency>true</eclipse.dependency>
