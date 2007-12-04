@@ -2,6 +2,7 @@
   <transport name="http" pivot="java:org.apache.axis.transport.http.HTTPSender"/>
   <globalConfiguration>
 	<parameter name="addressing.sendReplyTo" value="true" />
+	<parameter name="disablePrettyXML" value="true" />
 	<parameter name="enableNamespacePrefixOptimization" value="false" />
    	<requestFlow >
 		<handler type="java:org.apache.axis.message.addressing.handler.AddressingHandler">
@@ -9,7 +10,6 @@
 			<!--parameter name="referencePropertyNames" value="*"/-->
 		</handler>
 		<handler type="java:org.apache.ws.axis.security.WSDoAllSender" >
-    		<!-- parameters removed -->
     	</handler>
 	</requestFlow >
   </globalConfiguration >

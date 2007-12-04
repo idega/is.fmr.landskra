@@ -23,8 +23,8 @@
 					/>
 				-->
 				<!--parameter name="signatureParts"
-					value="{Element}{http://schemas.xmlsoap.org/soap/envelope/}Body;{Element}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}MessageID;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}To;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}Action" />
-				<parameter name="user" value="wse2qsclient" /-->
+					value="{Element}{http://schemas.xmlsoap.org/soap/envelope/}Body;{Element}{http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd}Timestamp;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}MessageID;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}To;{Element}{http://schemas.xmlsoap.org/ws/2004/03/addressing}Action" /-->
+				<parameter name="user" value="3abce25f-3305-4fb0-a708-2608c3a6ffc5" />
 			</handler>
 		</requestFlow>
 	</globalConfiguration>
