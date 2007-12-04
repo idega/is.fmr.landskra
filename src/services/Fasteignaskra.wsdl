@@ -413,7 +413,7 @@
   <wsdl:service name="Fasteignaskra">
     <documentation xmlns="http://schemas.xmlsoap.org/wsdl/" />
     <wsdl:port name="FasteignaskraSoap" binding="tns:FasteignaskraSoap">
-      <soap:address location="http://ws-test.fmr.is/SvcFasteignaskra_0201/Fasteignaskra.asmx" />
+      <soap:address location="http://ws.fmr.is/svcfasteignaskra_0202/Fasteignaskra.asmx" />
     </wsdl:port>
   </wsdl:service>
 </wsdl:definitions>
