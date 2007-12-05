@@ -169,5 +169,10 @@
       <name>1.1</name>
       <tag>FMR_1_1</tag>
     </version>
+    <version>
+      <id>1.1.1</id>
+      <name>1.1.1</name>
+      <tag>FMR_1_1_1</tag>
+    </version>
   </versions>
 </project>
