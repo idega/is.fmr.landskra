@@ -5,7 +5,7 @@
   <pomVersion>3</pomVersion>
   <name>Landskra Fasteigna Integration</name>
   <artifactId>is.fmr.landskra</artifactId>
-  <currentVersion>1.1</currentVersion>
+  <currentVersion>1.1.1</currentVersion>
   <inceptionYear>2007</inceptionYear>
   <shortDescription>Integration with FMR - Landskra Fasteigna</shortDescription>
   <developers>
